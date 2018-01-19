@@ -14,5 +14,8 @@ fn main() {
     draw_circle(&mut img, 128, 30, 15, Rgb{data:[255,128,255]});
      //draw_fill_circle(&mut img, 200, 100, 15, Rgb{data:[255,128,255]});
 
+ 	let ngon = generate_ngon(100,100,2,30);
+ 	draw_ngon(&mut img, &ngon, Rgb{data:[255,128,255]});
+
     img.save("output.png").unwrap();
 }

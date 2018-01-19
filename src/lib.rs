@@ -1,6 +1,32 @@
 extern crate image;
 
+use std::f32::consts::PI;
 use image::{GenericImage};
+
+pub struct Point {
+	x:i32,
+	y:i32
+}
+
+pub fn generate_ngon(x0:i32, y0:i32, n:u32, radius:i32) -> Vec<Point> {
+	let mut v:Vec<Point> = Vec::new();
+	for i in 0..n {
+		let p = Point{
+			x:x0 + ((radius as f32)*((2.0*PI*i as f32)/(n as f32)).cos()) as i32,
+			y:y0 + ((radius as f32)*((2.0*PI*i as f32)/(n as f32)).sin()) as i32,
+		};
+		v.push(p);
+	}
+	v
+}
+
+pub fn draw_ngon<T: GenericImage>(img: &mut T, v:&Vec<Point>, pixel: T::Pixel) {
+	for i in 0..v.len()-1 {
+		draw_line(img, v[i].x, v[i].y, v[i+1].x, v[i+1].y, pixel);
+	}
+	draw_line(img, v[v.len()-1].x, v[v.len()-1].y, v[0].x, v[0].y, pixel);
+
+}
 
 pub fn draw_hline<T: GenericImage>(img: &mut T, x0: i32, x1: i32, y: i32, pixel: T::Pixel) {
   for x in x0..x1 {
