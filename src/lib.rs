@@ -80,7 +80,7 @@ pub fn draw_circle<T: GenericImage>(img: &mut T, x0: i32, y0: i32, radius: i32, 
     img.put_pixel(x0 as u32, (y0 - radius) as u32, pixel);
     img.put_pixel((x0 + radius) as u32, y0 as u32, pixel);
     img.put_pixel((x0 - radius) as u32, y0 as u32, pixel);
- 
+
     while x < y {
         if f >= 0 {
             y -= 1;
@@ -90,6 +90,7 @@ pub fn draw_circle<T: GenericImage>(img: &mut T, x0: i32, y0: i32, radius: i32, 
         x += 1;
         ddf_x += 2;
         f += ddf_x + 1;
+
         img.put_pixel((x0 + x) as u32, (y0 + y) as u32, pixel);
         img.put_pixel((x0 - x) as u32, (y0 + y) as u32, pixel);
         img.put_pixel((x0 + x) as u32, (y0 - y) as u32, pixel);
@@ -101,6 +102,32 @@ pub fn draw_circle<T: GenericImage>(img: &mut T, x0: i32, y0: i32, radius: i32, 
     }
 }
 
+
+pub fn draw_fill_circle<T: GenericImage>(img: &mut T, x0: i32, y0: i32, radius: i32, pixel: T::Pixel) {
+    let mut f = 1 - radius;
+    let mut ddf_x = 0;
+    let mut ddf_y = -2 * radius;
+    let mut x = 0;
+    let mut y = radius;
+ 
+    draw_hline(img, (x0 - radius) as i32, (x0 + radius) as i32, y0 as i32, pixel);
+
+    while x < y {
+        if f >= 0 {
+            y -= 1;
+            ddf_y += 2;
+            f += ddf_y;
+        }
+        x += 1;
+        ddf_x += 2;
+        f += ddf_x + 1;
+
+        draw_hline(img, (x0 - x) as i32, (x0 + x) as i32, (y0 + y) as i32, pixel);
+        draw_hline(img, (x0 - x) as i32, (x0 + x) as i32, (y0 - y) as i32, pixel);
+        draw_hline(img, (x0 - y) as i32, (x0 + y) as i32, (y0 + x) as i32, pixel);
+        draw_hline(img, (x0 - y) as i32, (x0 + y) as i32, (y0 - x) as i32, pixel);
+    }
+}
 
 #[cfg(test)]
 mod tests {
